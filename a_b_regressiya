@@ -1,3 +1,4 @@
+from math import log10
 def linear_regression(x, y):
     n = len(x)
     a = (n * sum_mult(x, y) - sum(x) * sum(y)) / (n * sum_squares(x) - (sum(x)) ** 2)
@@ -22,3 +23,32 @@ y = [1422.2, 2529.7, 2629.1, 2764.3, 3347.5, 3914.2, 4400.8, 5904, 6956.7, 7595.
 a, b = linear_regression(x, y)
 print("Коэффициент наклона (a):", a)
 print("Свободный член (b):", b)
+def lg(x, y):
+    lgx = []
+    lgy = []
+    for i in range(len(x)):
+        lgx.append(log10(x[i]))
+        lgy.append(log10(y[i]))
+    return lgx, lgy
+lgx, lgy = lg(x, y)
+
+def avg(lst):
+    return sum(lst) / len(lst)
+
+def cov(lgx, lgy):
+    counter = 0
+    for i in range(len(lgx)):
+        counter += (lgx[i] - avg(lgx)) * (lgy[i] - avg(lgy))
+    counter /= (len(x) - 1)
+    return counter
+
+def calculate_variance(values):
+    n = len(values)
+    mean = sum(values) / n
+    variance = sum((x - mean) ** 2 for x in values) / (n - 1)
+    return variance
+
+b1 = cov(lgx, lgy) / calculate_variance(lgx)
+a1 = avg(lgy) - b1 * avg(lgx)
+
+print(a1, b1)
